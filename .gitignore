@@ -1,2 +1,6 @@
 # Project exclude paths
 /env/
+__pycache__/
+blog/__pycache__/
+api/migrations/__pycache__/
+.idea
