@@ -37,11 +37,9 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    posts = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
     class Meta:
         model = User
-        fields = ['id', 'username', 'posts', 'first_name', 'last_name']
+        fields = ['id', 'username', 'first_name', 'last_name']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
