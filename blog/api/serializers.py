@@ -1,11 +1,26 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post, Comment
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'text', 'user', 'post']
+        read_only_fields = ['user', 'created_at', 'post']
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        post_id = self.context['view'].kwargs.get('pk')
+        validated_data['post_id'] = post_id
+        return super().create(validated_data)
 
 
 class PostSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
